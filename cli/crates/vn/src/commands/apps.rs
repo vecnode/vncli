@@ -185,13 +185,14 @@ fn plan_for(name: &str, loaded: &LoadedConfig) -> Result<AppPlan> {
             env: vec![],
             mounts: vec![],
             wait_port: 5000,
-            // First run downloads every language's translation model (a few
-            // GB); observed ~4.5 minutes on a plain broadband connection.
-            // Reuse means that cost is paid only once.
-            wait_tries: 240,
+            // First run downloads every language's translation model
+            // (~9-10 GB); observed 5-10 minutes depending on connection
+            // speed, so give it a generous margin. Reuse means that cost
+            // is paid only once.
+            wait_tries: 400,
             open_url: "http://localhost:5000".into(),
             info: vec![
-                "LibreTranslate (AGPL-3.0). First run downloads translation models for every language; the container is reused afterward.".into(),
+                "LibreTranslate (AGPL-3.0). First run downloads translation models for every language (~9-10 GB, 5-10 minutes); the container is reused afterward.".into(),
             ],
         },
         other => bail!("unknown app: {other}. Available: {}", APP_NAMES.join(", ")),
