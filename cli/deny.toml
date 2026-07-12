@@ -31,8 +31,14 @@ wildcards = "warn"
 highlight = "all"
 allow = []
 deny = [
-    # Unstable or unmaintained crates
-    { name = "openssl", version = "*" }, # Use rustls instead
+    # We only ever want rustls. openssl still shows up transitively via
+    # ollama-rs's own reqwest dependency, which doesn't disable reqwest's
+    # default-tls feature - Cargo's feature unification then pulls it into
+    # our single resolved reqwest too, even though our own direct reqwest
+    # dependency is rustls-only and that's the only TLS path our code uses.
+    # Allow it only when reached through native-tls (its sole entry point
+    # here) so a *new*, unrelated openssl dependency would still be caught.
+    { name = "openssl", version = "*", wrappers = ["native-tls"] },
 ]
 skip-tree = []
 
