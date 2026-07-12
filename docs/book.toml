@@ -1,0 +1,8 @@
+[book]
+title = "vncli Docs"
+authors = ["vncli"]
+description = "Markdown docs for the vncli CLI and TUI."
+src = "."
+
+[build]
+create-missing = false

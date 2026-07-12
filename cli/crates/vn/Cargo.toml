@@ -1,0 +1,31 @@
+[package]
+name = "vn"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+description = "vncli - cross-platform personal management CLI for researchers"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+command-group = "5.0"
+crossterm = { workspace = true }
+dirs = { workspace = true }
+futures-util = { workspace = true }
+ratatui = { workspace = true }
+regex = { workspace = true }
+ollama-rs = { workspace = true }
+reqwest = { workspace = true }
+rmcp = { version = "2", features = ["transport-io", "transport-streamable-http-server"] }
+hyper-util = { version = "0.1", features = ["tokio", "server-auto", "service"] }
+schemars = "1"
+serde = { workspace = true }
+serde_json = { workspace = true }
+sysinfo = { workspace = true }
+tokio = { workspace = true }
+toml = { workspace = true }
+chrono = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+tray-item = "0.10"
+windows-sys = { version = "0.48", features = ["Win32_System_Console", "Win32_UI_Shell", "Win32_UI_WindowsAndMessaging"] }

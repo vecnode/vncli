@@ -1,0 +1,44 @@
+:root{
+  --bg:#f7f6f2;--surface:#ffffff;--surface-soft:#fbfaf7;--text:#1f1f1a;
+  --muted:#66655f;--line:#dfddd5;--line-strong:#cdcabf;--accent:#1f6feb;
+  --ok:#1f7a4d;--err:#b3261e;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;padding:1.25rem;color:var(--text);
+  background:linear-gradient(180deg,#f8f7f3 0%,#f4f3ef 100%);
+  font-family:"Segoe UI","Inter","Noto Sans","Helvetica Neue",Arial,sans-serif;
+  line-height:1.45;
+}
+.wrap{max-width:640px;margin:2rem auto;}
+.card{
+  border:1px solid var(--line);border-radius:12px;background:var(--surface);
+  box-shadow:0 1px 2px rgba(0,0,0,.03);padding:1rem 1.25rem 1.25rem;
+}
+h1{font-size:1.5rem;margin:0 0 .3rem;font-weight:600;letter-spacing:-.01em;}
+p.sub{margin:0 0 1.1rem;color:var(--muted);font-size:.92rem;}
+.url{
+  width:100%;padding:.7rem .8rem;font-size:.95rem;font:inherit;
+  background:var(--surface-soft);border:1px solid var(--line-strong);
+  border-radius:8px;color:var(--text);outline:none;
+  transition:border-color 140ms ease;
+}
+.url:focus-visible{outline:2px solid #6b95df;outline-offset:2px;}
+.row{display:flex;gap:.6rem;margin-top:.8rem;flex-wrap:wrap;}
+button.kind{
+  flex:1 1 120px;padding:.55rem .7rem;font-size:.92rem;font-weight:600;font:inherit;
+  background:var(--surface-soft);border:1px solid var(--line-strong);border-radius:8px;
+  color:var(--text);cursor:pointer;transition:background-color 140ms ease,border-color 140ms ease;
+}
+button.kind:hover{background:#f1f4fa;border-color:#bec8dc;}
+button.kind:focus-visible{outline:2px solid #6b95df;outline-offset:2px;}
+button.kind:disabled{opacity:.5;cursor:not-allowed;}
+.status{
+  margin-top:1.1rem;padding:.6rem .7rem;background:var(--surface-soft);
+  border:1px solid var(--line);border-radius:8px;font-size:.87rem;color:var(--muted);
+  min-height:1.3rem;white-space:pre-wrap;word-break:break-word;
+}
+.status.ok{color:var(--ok);border-color:var(--ok);}
+.status.err{color:var(--err);border-color:var(--err);}
+footer{margin-top:1.3rem;color:var(--muted);font-size:.78rem;}
+code{background:var(--surface-soft);border:1px solid var(--line);padding:1px 6px;border-radius:5px;}

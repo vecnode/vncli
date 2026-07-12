@@ -1,0 +1,52 @@
+@echo off
+setlocal EnableExtensions EnableDelayedExpansion
+
+REM Distributed launcher: the vn.exe binary already ships prebuilt at the path
+REM below (packaged by distribute_cli.bat), so unlike run_cli.bat this does
+REM NOT invoke cargo and works on a machine with no Rust toolchain installed.
+
+pushd "%~dp0" >nul 2>nul
+if errorlevel 1 (
+	echo [ERROR] Unable to enter script directory.
+	pause
+	exit /b 1
+)
+
+set "VN_BIN=.\cli\target\__RUST_HOST__\debug\vn.exe"
+set "REPO_ROOT=%~dp0"
+if "%REPO_ROOT:~-1%"=="\" set "REPO_ROOT=%REPO_ROOT:~0,-1%"
+
+if not exist "%VN_BIN%" (
+	echo [ERROR] Binary not found: %VN_BIN%
+	popd >nul
+	pause
+	exit /b 1
+)
+
+where rustscan >nul 2>nul
+if errorlevel 1 (
+	echo [INFO] rustscan not found. "vn net scan" will not work until it is installed.
+	echo [INFO] Install with: cargo install rustscan
+)
+
+echo [INFO] Launching vn...
+echo [INFO] Starting vncli tray icon...
+set "TRAY_BIN=%TEMP%\vncli-vn-tray-__RUST_HOST__.exe"
+copy /Y "%VN_BIN%" "%TRAY_BIN%" >nul 2>nul
+if errorlevel 1 (
+	echo [WARNING] Could not prepare tray binary copy. Falling back to main executable.
+	start "vncli tray" /MIN "%VN_BIN%" --repo-root "%REPO_ROOT%" tray
+) else (
+	start "vncli tray" /MIN "%TRAY_BIN%" --repo-root "%REPO_ROOT%" tray
+)
+
+"%VN_BIN%" --repo-root "%REPO_ROOT%" %*
+set "VN_EXIT=%ERRORLEVEL%"
+
+popd >nul
+if not "%VN_EXIT%"=="0" (
+	echo [ERROR] vn exited with code %VN_EXIT%.
+	pause
+)
+
+exit /b %VN_EXIT%

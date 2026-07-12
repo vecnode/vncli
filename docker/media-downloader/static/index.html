@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>media downloader</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>media downloader</h1>
+    <p class="sub">Paste a video link, pick a format. Files are saved to your <strong>__OUTPUT_LABEL__</strong>. Powered by yt-dlp + ffmpeg.</p>
+    <input id="url" class="url" type="text" placeholder="https://..." autocomplete="off">
+    <div class="row">
+      <button class="kind" data-kind="mp3" type="button">Save MP3</button>
+      <button class="kind" data-kind="wav" type="button">Save WAV</button>
+      <button class="kind" data-kind="mp4" type="button">Save MP4</button>
+    </div>
+    <div id="status" class="status">Ready.</div>
+    <footer>API: <code>POST /api/download</code> &middot; Health: <code>/health</code></footer>
+  </div>
+</div>
+<script src="/static/main.js"></script>
+</body></html>
