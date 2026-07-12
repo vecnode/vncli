@@ -7,6 +7,8 @@
 
 `vncli` is a cross-platform (Windows/Linux) command-line tool and TUI for researchers who want one local, offline-first place to manage their machine: sync personal git repositories, launch self-hosted research apps in Docker, chat with a local LLM over Ollama, and inspect system/network state — all from a single `vn` binary, no cloud account required.
 
+![vncli TUI](assets/tui.png)
+
 ## Install
 
 Requires [Rust](https://rustup.rs/) and, for the Docker-managed apps, [Docker](https://docs.docker.com/engine/install/).
