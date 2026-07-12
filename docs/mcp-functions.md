@@ -23,7 +23,7 @@ result.
 
 ## Apps toolset (`cli/crates/vn/src/mcp/apps_toolset.rs`)
 
-- `list_apps` — list the Dockerized vncli apps by name (docs, bentopdf, library, media-downloader, doc-processor). Always allowed, no approval needed.
+- `list_apps` — list the Dockerized vncli apps by name (docs, bentopdf, library, media-downloader, doc-processor, translator). Always allowed, no approval needed.
 - `open_app` — build/start an app's container and wait for it to become ready; opens a browser tab unless `no_open` says otherwise (see default rules below). Always allowed, no approval needed.
 - `stop_app` — stop a running app's container. **Destructive — requires interactive approval in the TUI**; auto-denied with no TUI attached (headless `vn mcp serve`).
 - `restart_app` — stop_app + open_app in one call, for "it's stuck, restart it" instead of two tool calls. **Destructive — requires interactive approval in the TUI**; auto-denied with no TUI attached.

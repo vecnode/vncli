@@ -256,8 +256,10 @@ The engine enforces the security posture automatically (don't bypass it): ports 
 plan sets `linux_user` (so bind-mount files stay user-owned). See SECURITY.md.
 
 Apps: BentoPDF (`ghcr.io/alam00000/bentopdf-simple`, port 8080, AGPL-3.0 self-hosted build,
-reuses its container), docs (mdBook, port 3000), plus the locally built **library** (8090,
-image source `docker/library-portal/`), **doc-processor** (8085/8086, image source
+reuses its container), translator (`libretranslate/libretranslate`, port 5000, AGPL-3.0,
+reuses its container - first run downloads every language's translation model), docs
+(mdBook, port 3000), plus the locally built **library** (8090, image source
+`docker/library-portal/`), **doc-processor** (8085/8086, image source
 `docker/media-processor/`) and **media-downloader** (8095), which rebuild + recreate on
 every open (picks up code edits).
 

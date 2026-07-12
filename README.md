@@ -24,7 +24,12 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 
 - Terminal UI tying everything below together.
 - Pull/status across every git repo under a root folder (defaults to `~/dev`).
-- Build/launch self-hosted research apps (Docs, Library, MediaDownloader, DocProcessor, etc) as Docker containers.
+- Build/launch container applications
+  - Docs
+  - Library
+  - Media Downloader
+  - Doc Processor
+  - Translator
 - Direct Docker container/image management.
 - Offline chat and model management against a local Ollama server.
 - Host system information and maintenance.
@@ -35,7 +40,7 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 
 - `vn tui` (default) — terminal UI tying everything below together.
 - `vn git sync|status` — pull/status across every git repo under a root folder (defaults to `~/dev`).
-- `vn app open|stop|list` — build/launch self-hosted research apps (docs, library, media-downloader, doc-processor, and pulled images like BentoPDF) as Docker containers, hardened and loopback-only by default.
+- `vn app open|stop|list` — build/launch self-hosted research apps (docs, library, media-downloader, doc-processor, and pulled images like BentoPDF and LibreTranslate) as Docker containers, hardened and loopback-only by default.
 - `vn docker ps|up|down|prune|check|stop-all|remove-containers|remove-images` — direct container/image management.
 - `vn ai status|models|pull|chat` — offline chat and model management against a local [Ollama](https://ollama.com/) server.
 - `vn sys info|update|clean` — host system information and maintenance.

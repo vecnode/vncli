@@ -142,7 +142,7 @@ Per-app threat model:
 | library | 8090 | `library/` read-write | Unauthenticated UI that can rename/move/delete PDFs - safe only because it is loopback-bound. State kept in `library/.portal/`. |
 | doc-processor | 8085/8086 | host Desktop read-write | pandoc/tectonic markdown-to-PDF + pypdf join; output confined to the Desktop mount. |
 | media-downloader | 8095 | host Desktop read-write | Fetches **untrusted URLs** (yt-dlp): http/https only, an initial fast-fail check rejects hosts resolving to loopback/private/link-local ranges, and **every connection yt-dlp itself makes is routed through an in-container egress-guard proxy** (`start_egress_proxy` in `docker/media-downloader/app.py`) that re-resolves and re-validates the target at actual connect time — this catches redirects to a different (private) host and DNS-rebinding between the initial check and yt-dlp's own lookup, not just the initial URL. Also: `--ignore-config --restrict-filenames --no-exec --max-filesize`, sanitized traversal-checked collision-safe output names. |
-| BentoPDF / docs | 8080/3000 | none | Pulled published image (BentoPDF) and a local build (docs). Neither has built-in authentication; safe only while loopback-bound. |
+| BentoPDF / translator / docs | 8080/5000/3000 | none | Pulled published images (BentoPDF, translator) and a local build (docs). None has built-in authentication (translator can be gated with `LT_API_KEYS`); safe only while loopback-bound. Translation runs entirely on-container, no outbound requests per translation. |
 
 Image supply chain: base images are pinned tags (`debian:12-slim`,
 `python:3.12-slim`); Python deps are version-pinned except `yt-dlp`, which is

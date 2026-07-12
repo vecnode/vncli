@@ -22,9 +22,9 @@ vn app stop <name>
 vn app list
 ```
 
-`docs/` (mdBook) and BentoPDF (a pulled vendor image) are also part of
+`docs/` (mdBook) and BentoPDF/translator (pulled vendor images) are also part of
 the same `vn app` registry but don't have a folder here — the first has its own
-[docs/Dockerfile](../docs/Dockerfile), and the second is pulled, not built.
+[docs/Dockerfile](../docs/Dockerfile), and the other two are pulled, not built.
 
 ## Security posture
 
