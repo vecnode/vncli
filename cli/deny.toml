@@ -22,6 +22,20 @@ allow = [
     "Unicode-3.0",
     "Unicode-DFS-2016",
     "Zlib",
+    # Community Data License Agreement Permissive 2.0 - used by webpki-roots
+    # for its bundled CA certificate data, not code.
+    "CDLA-Permissive-2.0",
+]
+
+# ollama-rs's published Cargo.toml doesn't declare a license field, so
+# cargo-deny can't verify it from metadata alone. Its repo's LICENSE.md
+# confirms MIT (github.com/pepperoni21/ollama-rs). The hash below is a
+# placeholder pending the real value cargo-deny reports on first run.
+[[licenses.clarify]]
+crate = "ollama-rs"
+expression = "MIT"
+license-files = [
+    { path = "LICENSE.md", hash = 0x00000000 },
 ]
 
 [bans]
