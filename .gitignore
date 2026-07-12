@@ -1,3 +1,8 @@
 /cli/target/
 __pycache__/
 *.pyc
+backup/
+logs/
+*.log
+*.tmp
+library/

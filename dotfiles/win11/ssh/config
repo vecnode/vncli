@@ -1,0 +1,11 @@
+# SSH Config - Read more about SSH config files: https://linux.die.net/man/5/ssh_config
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_rsa
+
+Host alias
+    HostName hostname
+    User user
+    IdentityFile ~/.ssh/id_rsa

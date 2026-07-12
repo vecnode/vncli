@@ -1,10 +1,9 @@
 name: CI
 
+# Manual trigger only - run from the Actions tab (or `gh workflow run CI`)
+# when a package/build check is actually needed, not on every push/PR.
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch: {}
 
 env:
   CARGO_TERM_COLOR: always
