@@ -2,9 +2,8 @@
 # Reference: https://embarkstudios.github.io/cargo-deny/
 
 [advisories]
-# RUSTSEC advisories database
-db-path = "~/.cargo/advisory-db"
-db-urls = ["https://github.com/rustsec/advisory-db/raw/main/db.toml.gz"]
+# RUSTSEC advisories database - uses cargo-deny's built-in default source
+# (a git clone of https://github.com/rustsec/advisory-db).
 unmaintained = "workspace"
 unsound = "workspace"
 ignore = []
