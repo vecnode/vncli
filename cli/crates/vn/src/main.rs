@@ -210,7 +210,7 @@ async fn main() -> Result<()> {
             AppCommand::List => commands::apps::list()?,
         },
         Some(Command::Sys(args)) => commands::sys::run(args)?,
-        Some(Command::Docker(args)) => commands::docker::run(args, &loaded)?,
+        Some(Command::Docker(args)) => commands::docker::run(args)?,
         Some(Command::Git(args)) => commands::git::run(args)?,
         Some(Command::Net(args)) => commands::net::run(args)?,
         Some(Command::Run(args)) => commands::run::run(args, &loaded)?,

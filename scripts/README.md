@@ -32,9 +32,3 @@ Docker Alpine Dependencies
 - python
 - yt-dlp
 
-### Silverbullet
-```bash
-# Stop container
-docker stop silverbullet-local
-```
-

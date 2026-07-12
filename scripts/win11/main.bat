@@ -34,12 +34,11 @@ echo.
 echo What would you like to do?
 echo   1 = Docker
 echo   2 = GitHub
-echo   3 = Silverbullet
-echo   4 = Settings
-echo   5 = Quit
+echo   3 = Settings
+echo   4 = Quit
 echo.
 set "MAIN_CHOICE="
-set /p MAIN_CHOICE="Enter your choice (1, 2, 3, 4, or 5): "
+set /p MAIN_CHOICE="Enter your choice (1, 2, 3, or 4): "
 
 if "%MAIN_CHOICE%"=="1" (
     echo.
@@ -53,21 +52,16 @@ if "%MAIN_CHOICE%"=="2" (
 
 if "%MAIN_CHOICE%"=="3" (
     echo.
-    goto :silverbullet_menu
-)
-
-if "%MAIN_CHOICE%"=="4" (
-    echo.
     goto :settings_menu
 )
 
-if "%MAIN_CHOICE%"=="5" (
+if "%MAIN_CHOICE%"=="4" (
     echo.
     echo [INFO] Exiting.
     exit /b 0
 )
 
-echo [ERROR] Invalid choice. Please enter 1, 2, 3, 4, or 5.
+echo [ERROR] Invalid choice. Please enter 1, 2, 3, or 4.
 goto :main_menu
 
 REM ---------------------------------------------------------------------------
@@ -252,42 +246,6 @@ if "%DOCKER_CHOICE%"=="5" (
 echo [ERROR] Invalid choice. Please enter 1, 2, 3, 4, or 5.
 echo.
 goto :docker_menu
-
-REM ---------------------------------------------------------------------------
-REM SILVERBULLET MENU
-REM ---------------------------------------------------------------------------
-
-:silverbullet_menu
-echo What would you like to do?
-echo   1 = Run Silverbullet
-echo   2 = Menu
-echo   3 = Quit
-echo.
-set "SILVERBULLET_CHOICE="
-set /p SILVERBULLET_CHOICE="Enter your choice (1, 2, or 3): "
-
-if "%SILVERBULLET_CHOICE%"=="1" (
-    echo.
-    echo [INFO] SilverBullet is now launched natively by vn.
-    echo [INFO] Run:  vn app open silverbullet
-    echo.
-    goto :silverbullet_menu
-)
-
-if "%SILVERBULLET_CHOICE%"=="2" (
-    echo.
-    goto :main_menu
-)
-
-if "%SILVERBULLET_CHOICE%"=="3" (
-    echo.
-    echo [INFO] Exiting.
-    exit /b 0
-)
-
-echo [ERROR] Invalid choice. Please enter 1, 2, or 3.
-echo.
-goto :silverbullet_menu
 
 REM ---------------------------------------------------------------------------
 REM GITHUB BACKUP - USERNAME PROMPT

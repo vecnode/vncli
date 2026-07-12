@@ -11,7 +11,7 @@ use anyhow::{bail, Context, Result};
 use std::fs;
 use std::io::{BufRead, BufReader};
 use std::net::TcpStream;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::sync::mpsc;
 use std::thread;
@@ -19,7 +19,6 @@ use std::time::Duration;
 
 pub const APP_NAMES: &[&str] = &[
     "docs",
-    "silverbullet",
     "bentopdf",
     "library",
     "media-downloader",
@@ -89,25 +88,6 @@ fn plan_for(name: &str, loaded: &LoadedConfig) -> Result<AppPlan> {
                 info: vec![],
             }
         }
-        "silverbullet" => AppPlan {
-            container: "silverbullet",
-            image: "ghcr.io/silverbulletmd/silverbullet:latest".into(),
-            build: None,
-            lifecycle: Lifecycle::Recreate { rm_on_exit: true },
-            harden: false,
-            pids_limit: None,
-            linux_user: false,
-            ports: vec![(3000, 3000)],
-            env: vec![("SB_USER".into(), "user:password".into())],
-            mounts: vec![(home.join("silverbullet-space"), "/space".into())],
-            wait_port: 3000,
-            wait_tries: 20,
-            open_url: "http://localhost:3000".into(),
-            info: vec![
-                "Username: user  Password: password (change SB_USER before wider exposure)".into(),
-                format!("Data folder: {}", home.join("silverbullet-space").display()),
-            ],
-        },
         "bentopdf" => AppPlan {
             container: "bentopdf",
             // Self-hosted build (AGPL-3.0, free) - not the commercial build.
@@ -218,10 +198,6 @@ pub fn open_reported(
     let plan = plan_for(name, loaded)?;
     check_docker_ready(report)?;
 
-    // Per-app preparation.
-    if name == "silverbullet" {
-        backup_silverbullet_space(report)?;
-    }
     for (host_path, _) in &plan.mounts {
         fs::create_dir_all(host_path)
             .with_context(|| format!("failed to create mount dir: {}", host_path.display()))?;
@@ -863,52 +839,6 @@ fn open_browser(url: &str, report: &mut dyn FnMut(&str)) {
     {
         report(&format!("[DOCKER] [INFO] Open manually: {url}"));
     }
-}
-
-/// Back up ~/silverbullet-space to Desktop/silverbullet-space-backup-<ts>
-/// before recreating the container (matches the old win11 script; the old
-/// ubuntu script asked interactively — now both platforms back up always).
-fn backup_silverbullet_space(report: &mut dyn FnMut(&str)) -> Result<()> {
-    let home = dirs::home_dir().context("could not determine home directory")?;
-    let space = home.join("silverbullet-space");
-    if !space.exists() {
-        report("[DOCKER] [INFO] Space folder does not exist, creating it.");
-        fs::create_dir_all(&space)?;
-        return Ok(());
-    }
-    let desktop = home.join("Desktop");
-    if !desktop.exists() {
-        report("[DOCKER] [WARNING] No Desktop folder; skipping space backup.");
-        return Ok(());
-    }
-    let ts = chrono::Local::now().format("%Y%m%d-%H%M%S");
-    let target = desktop.join(format!("silverbullet-space-backup-{ts}"));
-    report(&format!(
-        "[DOCKER] [INFO] Backing up space folder to: {}",
-        target.display()
-    ));
-    copy_dir_recursive(&space, &target)?;
-    report(&format!(
-        "[DOCKER] [OK] Backup completed: {}",
-        target.display()
-    ));
-    Ok(())
-}
-
-fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<()> {
-    fs::create_dir_all(dst)?;
-    for entry in fs::read_dir(src)? {
-        let entry = entry?;
-        let src_path = entry.path();
-        let dst_path = dst.join(entry.file_name());
-        if entry.file_type()?.is_dir() {
-            copy_dir_recursive(&src_path, &dst_path)?;
-        } else {
-            fs::copy(&src_path, &dst_path)
-                .with_context(|| format!("failed to copy {}", src_path.display()))?;
-        }
-    }
-    Ok(())
 }
 
 fn repo_root(loaded: &LoadedConfig) -> Result<PathBuf> {

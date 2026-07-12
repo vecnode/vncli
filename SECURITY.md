@@ -125,10 +125,10 @@ The TUI Open menu launches local web apps in Docker. Their shared posture:
   image; on Linux `vn` passes `--user $(id -u):$(id -g)` so files written to
   bind mounts stay owned by you), with `--cap-drop ALL`,
   `--security-opt no-new-privileges`, and `--pids-limit 512`.
-- **Pulled vendor images (SilverBullet, BentoPDF) are not cap-dropped**: some
-  vendor entrypoints legitimately need privilege transitions (e.g. a
-  root-to-app-user `setpriv` step requiring CAP_SETUID/SETGID) that break
-  under `--cap-drop ALL`. They run as upstream intends, protected by the
+- **Pulled vendor images (BentoPDF) are not cap-dropped**: some vendor
+  entrypoints legitimately need privilege transitions (e.g. a root-to-app-user
+  `setpriv` step requiring CAP_SETUID/SETGID) that break under
+  `--cap-drop ALL`. They run as upstream intends, protected by the
   loopback-only binding.
 - All of this is enforced by **one Rust code path**
   ([cli/crates/vn/src/commands/apps.rs](cli/crates/vn/src/commands/apps.rs), the
@@ -142,7 +142,7 @@ Per-app threat model:
 | library | 8090 | `library/` read-write | Unauthenticated UI that can rename/move/delete PDFs - safe only because it is loopback-bound. State kept in `library/.portal/`. |
 | doc-processor | 8085/8086 | host Desktop read-write | pandoc/tectonic markdown-to-PDF + pypdf join; output confined to the Desktop mount. |
 | media-downloader | 8095 | host Desktop read-write | Fetches **untrusted URLs** (yt-dlp): http/https only, an initial fast-fail check rejects hosts resolving to loopback/private/link-local ranges, and **every connection yt-dlp itself makes is routed through an in-container egress-guard proxy** (`start_egress_proxy` in `docker/media-downloader/app.py`) that re-resolves and re-validates the target at actual connect time — this catches redirects to a different (private) host and DNS-rebinding between the initial check and yt-dlp's own lookup, not just the initial URL. Also: `--ignore-config --restrict-filenames --no-exec --max-filesize`, sanitized traversal-checked collision-safe output names. |
-| SilverBullet / BentoPDF / docs | 3000/8080 | space/none | Pulled published images (docs is local). SilverBullet uses a default `SB_USER=user:password` credential - change it before any wider exposure. BentoPDF and docs have no built-in authentication; safe only while loopback-bound. |
+| BentoPDF / docs | 8080/3000 | none | Pulled published image (BentoPDF) and a local build (docs). Neither has built-in authentication; safe only while loopback-bound. |
 
 Image supply chain: base images are pinned tags (`debian:12-slim`,
 `python:3.12-slim`); Python deps are version-pinned except `yt-dlp`, which is

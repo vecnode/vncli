@@ -255,12 +255,11 @@ The engine enforces the security posture automatically (don't bypass it): ports 
 `--pids-limit` for locally built images, and on Linux `--user $(id -u):$(id -g)` where the
 plan sets `linux_user` (so bind-mount files stay user-owned). See SECURITY.md.
 
-Apps: SilverBullet (`ghcr.io/silverbulletmd/silverbullet`, port 3000, backs up the space
-folder to Desktop before each start), BentoPDF (`ghcr.io/alam00000/bentopdf-simple`, port
-8080, AGPL-3.0 self-hosted build, reuses its container), docs (mdBook, port 3000), plus the
-locally built **library** (8090, image source `docker/library-portal/`), **doc-processor**
-(8085/8086, image source `docker/media-processor/`) and **media-downloader** (8095), which
-rebuild + recreate on every open (picks up code edits).
+Apps: BentoPDF (`ghcr.io/alam00000/bentopdf-simple`, port 8080, AGPL-3.0 self-hosted build,
+reuses its container), docs (mdBook, port 3000), plus the locally built **library** (8090,
+image source `docker/library-portal/`), **doc-processor** (8085/8086, image source
+`docker/media-processor/`) and **media-downloader** (8095), which rebuild + recreate on
+every open (picks up code edits).
 
 **media-downloader (custom, locally built):** a tiny yt-dlp + ffmpeg web app in
 [docker/media-downloader/](docker/media-downloader/) — `debian:12-slim` + a single stdlib

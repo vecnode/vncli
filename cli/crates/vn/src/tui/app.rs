@@ -1742,10 +1742,6 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
                 action: Action::Execute(vec!["app", "open", "docs"]),
             },
             CommandItem {
-                label: "vn app open silverbullet",
-                action: Action::Execute(vec!["app", "open", "silverbullet"]),
-            },
-            CommandItem {
                 label: "vn app open bentopdf",
                 action: Action::Execute(vec!["app", "open", "bentopdf"]),
             },
@@ -1884,10 +1880,6 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
             CommandItem {
                 label: "vn app open docs",
                 action: Action::Execute(vec!["app", "open", "docs"]),
-            },
-            CommandItem {
-                label: "vn app open silverbullet",
-                action: Action::Execute(vec!["app", "open", "silverbullet"]),
             },
             CommandItem {
                 label: "vn app open bentopdf",

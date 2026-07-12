@@ -43,9 +43,6 @@ fn try_native(name: &str, loaded: &LoadedConfig) -> Option<Result<()>> {
         .unwrap_or(&key);
     let result = match stripped {
         "open-docs" => apps::open("docs", loaded, false),
-        "silverbullet" | "run-silverbullet" | "open-silverbullet" => {
-            apps::open("silverbullet", loaded, false)
-        }
         "open-bentopdf" => apps::open("bentopdf", loaded, false),
         "stop-bentopdf" => apps::stop("bentopdf", loaded),
         "open-library" => apps::open("library", loaded, false),
@@ -193,7 +190,7 @@ fn map_script(name: &str) -> Result<ScriptTarget> {
             relative_path: "scripts/tools-cli/alpine/main.sh",
         },
         _ => bail!(
-            "unknown script name '{}'. Supported linux and win11 script names plus cross-platform aliases (e.g. check-internet, check-dependencies, open-docker, open-docs, open-doc-processor, check-ollama, open-ollama, download-all-repos, download-all-orgs, run-cli-container, open-silverbullet)",
+            "unknown script name '{}'. Supported linux and win11 script names plus cross-platform aliases (e.g. check-internet, check-dependencies, open-docker, open-docs, open-doc-processor, check-ollama, open-ollama, download-all-repos, download-all-orgs, run-cli-container, open-library)",
             name
         ),
     };

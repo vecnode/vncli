@@ -89,11 +89,10 @@ while true; do
   echo "What would you like to do?"
   echo "  1 = Docker"
   echo "  2 = GitHub"
-  echo "  3 = Silverbullet"
-  echo "  4 = Settings"
-  echo "  5 = Quit"
+  echo "  3 = Settings"
+  echo "  4 = Quit"
   echo ""
-  read -r -p "Enter your choice (1, 2, 3, 4, or 5): " MAIN_CHOICE
+  read -r -p "Enter your choice (1, 2, 3, or 4): " MAIN_CHOICE
   clear
 
   if [[ "$MAIN_CHOICE" == "1" ]]; then
@@ -228,43 +227,6 @@ while true; do
   fi
 
   if [[ "$MAIN_CHOICE" == "3" ]]; then
-    echo ""
-
-    while true; do
-      echo "What would you like to do?"
-      echo "  1 = Run Silverbullet"
-      echo "  2 = Menu"
-      echo "  3 = Quit"
-      echo ""
-      read -r -p "Enter your choice (1, 2, or 3): " SILVERBULLET_CHOICE
-      clear
-
-      if [[ "$SILVERBULLET_CHOICE" == "1" ]]; then
-        echo ""
-        echo "[INFO] SilverBullet is now launched natively by vn."
-        echo "[INFO] Run:  vn app open silverbullet"
-        echo ""
-        continue
-      fi
-
-      if [[ "$SILVERBULLET_CHOICE" == "2" ]]; then
-        echo ""
-        break
-      fi
-
-      if [[ "$SILVERBULLET_CHOICE" == "3" ]]; then
-        echo ""
-        echo "[INFO] Exiting."
-        exit 0
-      fi
-
-      echo "[ERROR] Invalid choice. Please enter 1, 2, or 3."
-      echo ""
-    done
-    continue
-  fi
-
-  if [[ "$MAIN_CHOICE" == "4" ]]; then
     while true; do
       echo "What would you like to do?"
       echo "  1 = Check Internet"
@@ -305,13 +267,13 @@ while true; do
     continue
   fi
 
-  if [[ "$MAIN_CHOICE" == "5" ]]; then
+  if [[ "$MAIN_CHOICE" == "4" ]]; then
     echo ""
     echo "[INFO] Exiting."
     exit 0
   fi
 
-  echo "[ERROR] Invalid choice. Please enter 1, 2, 3, 4, or 5."
+  echo "[ERROR] Invalid choice. Please enter 1, 2, 3, or 4."
 done
 
 # ---------------------------------------------------------------------------
