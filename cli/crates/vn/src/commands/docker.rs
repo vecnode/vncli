@@ -1,9 +1,8 @@
-use crate::config::LoadedConfig;
 use crate::{DockerArgs, DockerSubcommand};
 use anyhow::{anyhow, Context, Result};
 use std::process::{Command, Stdio};
 
-pub fn run(args: DockerArgs, loaded: &LoadedConfig) -> Result<()> {
+pub fn run(args: DockerArgs) -> Result<()> {
     match args.command {
         DockerSubcommand::Ps => run_cmd("docker", &["ps"]),
         DockerSubcommand::Prune => run_cmd("docker", &["system", "prune", "-af"]),
@@ -12,9 +11,7 @@ pub fn run(args: DockerArgs, loaded: &LoadedConfig) -> Result<()> {
         DockerSubcommand::RemoveContainers => crate::commands::apps::docker_remove_containers(),
         DockerSubcommand::RemoveImages => crate::commands::apps::docker_remove_images(),
         DockerSubcommand::Up { service } => {
-            if matches!(service.as_deref(), Some("silverbullet")) {
-                crate::commands::apps::open("silverbullet", loaded, false)
-            } else if let Some(name) = service {
+            if let Some(name) = service {
                 validate_docker_service_name(&name)?;
                 run_cmd("docker", &["start", &name])
             } else {

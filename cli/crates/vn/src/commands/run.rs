@@ -43,13 +43,10 @@ fn try_native(name: &str, loaded: &LoadedConfig) -> Option<Result<()>> {
         .unwrap_or(&key);
     let result = match stripped {
         "open-docs" => apps::open("docs", loaded, false),
-        "silverbullet" | "run-silverbullet" | "open-silverbullet" => {
-            apps::open("silverbullet", loaded, false)
-        }
-        "open-stirling-pdf" => apps::open("stirling-pdf", loaded, false),
-        "stop-stirling-pdf" => apps::stop("stirling-pdf", loaded),
-        "open-library-portal" => apps::open("library-portal", loaded, false),
-        "stop-library-portal" => apps::stop("library-portal", loaded),
+        "open-bentopdf" => apps::open("bentopdf", loaded, false),
+        "stop-bentopdf" => apps::stop("bentopdf", loaded),
+        "open-library" => apps::open("library", loaded, false),
+        "stop-library" => apps::stop("library", loaded),
         "open-media-downloader" => apps::open("media-downloader", loaded, false),
         "stop-media-downloader" => apps::stop("media-downloader", loaded),
         "open-doc-processor" => apps::open("doc-processor", loaded, false),
@@ -193,7 +190,7 @@ fn map_script(name: &str) -> Result<ScriptTarget> {
             relative_path: "scripts/tools-cli/alpine/main.sh",
         },
         _ => bail!(
-            "unknown script name '{}'. Supported linux and win11 script names plus cross-platform aliases (e.g. check-internet, check-dependencies, open-docker, open-docs, open-doc-processor, check-ollama, open-ollama, download-all-repos, download-all-orgs, run-cli-container, open-silverbullet)",
+            "unknown script name '{}'. Supported linux and win11 script names plus cross-platform aliases (e.g. check-internet, check-dependencies, open-docker, open-docs, open-doc-processor, check-ollama, open-ollama, download-all-repos, download-all-orgs, run-cli-container, open-library)",
             name
         ),
     };
@@ -281,7 +278,7 @@ pub(crate) fn detect_repo_root(loaded: &LoadedConfig) -> Result<PathBuf> {
             return Ok(p);
         } else {
             eprintln!(
-                "WARNING: VNCLI_REPO_ROOT={} does not look like a valid vncli repository (missing .git directory)",
+                "WARNING: VNCLI_REPO_ROOT={} does not look like a valid vncli repository (missing scripts/ or docker/ directory)",
                 path
             );
         }
@@ -303,9 +300,12 @@ pub(crate) fn detect_repo_root(loaded: &LoadedConfig) -> Result<PathBuf> {
     bail!("could not locate repository root. Run inside the vncli repo or set VNCLI_REPO_ROOT")
 }
 
-/// Validate that a path is a vncli repository by checking for .git directory and scripts subdirectory.
+/// Validate that a path looks like a vncli repo/distribution root. Deliberately
+/// does not require `.git`: `distribute_cli.bat` ships a plain folder (no git
+/// checkout) that still needs `vn app open <name>` to find `docker/` and
+/// `scripts/` for its build contexts and helper scripts.
 fn is_valid_repo_root(path: &Path) -> bool {
-    let has_git = path.join(".git").exists();
     let has_scripts = path.join("scripts").exists();
-    has_git && has_scripts
+    let has_docker = path.join("docker").exists();
+    has_scripts && has_docker
 }

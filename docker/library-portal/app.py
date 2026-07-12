@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""library-portal — a light web viewer/manager for the vncli library/ folder.
+"""library — a light web viewer/manager for the vncli library/ folder.
 
 Serves an Anthropic-style index of the PDFs under /library (bind-mounted at
 runtime) and streams each file for in-browser viewing. It also lets you:
@@ -333,7 +333,7 @@ footer{{color:var(--muted);font-size:12px;margin-top:30px;text-align:center;}}
   <div id="list" class="view-list">{rows}</div>
   <div id="tree" class="tree" style="display:none"></div>
   <div id="empty" class="empty" style="display:none">No documents match.</div>
-  <footer>library-portal · served live from <code>library/</code></footer>
+  <footer>library · served live from <code>library/</code></footer>
 </div>
 
 <div id="selbar" class="selbar">
@@ -748,7 +748,7 @@ def render_index() -> str:
 # server
 # --------------------------------------------------------------------------- #
 class Handler(BaseHTTPRequestHandler):
-    server_version = "library-portal"
+    server_version = "library"
 
     def _send(self, code, body=b"", ctype="text/html; charset=utf-8", extra=None):
         if isinstance(body, str):
@@ -1006,7 +1006,7 @@ class Handler(BaseHTTPRequestHandler):
 
 def main():
     engine = "with thumbnails" if fitz else "no thumbnail engine"
-    print(f"[library-portal] serving {LIBRARY} on http://0.0.0.0:{PORT} ({engine})", flush=True)
+    print(f"[library] serving {LIBRARY} on http://0.0.0.0:{PORT} ({engine})", flush=True)
     ThreadingHTTPServer(("0.0.0.0", PORT), Handler).serve_forever()
 
 

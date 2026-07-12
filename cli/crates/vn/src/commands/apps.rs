@@ -11,7 +11,7 @@ use anyhow::{bail, Context, Result};
 use std::fs;
 use std::io::{BufRead, BufReader};
 use std::net::TcpStream;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::sync::mpsc;
 use std::thread;
@@ -19,9 +19,8 @@ use std::time::Duration;
 
 pub const APP_NAMES: &[&str] = &[
     "docs",
-    "silverbullet",
-    "stirling-pdf",
-    "library-portal",
+    "bentopdf",
+    "library",
     "media-downloader",
     "doc-processor",
 ];
@@ -43,8 +42,8 @@ struct AppPlan {
     /// Apply --cap-drop ALL --security-opt no-new-privileges (+ pids limit).
     /// True for our locally built images (they run non-root and need no caps);
     /// false for pulled vendor images whose entrypoints legitimately need
-    /// privilege transitions (e.g. Stirling-PDF setpriv's from root to its
-    /// app user, which requires CAP_SETUID/SETGID).
+    /// privilege transitions (e.g. a root-to-app-user setpriv step requiring
+    /// CAP_SETUID/SETGID).
     harden: bool,
     pids_limit: Option<u32>,
     /// Linux: pass --user $(uid):$(gid) so bind-mount files stay user-owned.
@@ -89,57 +88,28 @@ fn plan_for(name: &str, loaded: &LoadedConfig) -> Result<AppPlan> {
                 info: vec![],
             }
         }
-        "silverbullet" => AppPlan {
-            container: "silverbullet",
-            image: "ghcr.io/silverbulletmd/silverbullet:latest".into(),
-            build: None,
-            lifecycle: Lifecycle::Recreate { rm_on_exit: true },
-            harden: false,
-            pids_limit: None,
-            linux_user: false,
-            ports: vec![(3000, 3000)],
-            env: vec![("SB_USER".into(), "user:password".into())],
-            mounts: vec![(home.join("silverbullet-space"), "/space".into())],
-            wait_port: 3000,
-            wait_tries: 20,
-            open_url: "http://localhost:3000".into(),
-            info: vec![
-                "Username: user  Password: password (change SB_USER before wider exposure)".into(),
-                format!("Data folder: {}", home.join("silverbullet-space").display()),
-            ],
-        },
-        "stirling-pdf" => AppPlan {
-            container: "stirling-pdf",
-            image: "stirlingtools/stirling-pdf:latest".into(),
+        "bentopdf" => AppPlan {
+            container: "bentopdf",
+            // Self-hosted build (AGPL-3.0, free) - not the commercial build.
+            image: "ghcr.io/alam00000/bentopdf-simple:latest".into(),
             build: None,
             lifecycle: Lifecycle::Reuse,
             harden: false,
             pids_limit: None,
             linux_user: false,
             ports: vec![(8080, 8080)],
-            // Free core only, fully local: DISABLE_ADDITIONAL_FEATURES
-            // turns off the premium/license/login module (v7 enables it by
-            // default), and the other two stop the posthog analytics and the
-            // update-check pings. This is a loopback-only local tool.
-            env: vec![
-                ("DISABLE_ADDITIONAL_FEATURES".into(), "true".into()),
-                ("SECURITY_ENABLELOGIN".into(), "false".into()),
-                ("SYSTEM_ENABLEANALYTICS".into(), "false".into()),
-                ("SYSTEM_SHOWUPDATE".into(), "false".into()),
-            ],
+            env: vec![],
             mounts: vec![],
             wait_port: 8080,
             wait_tries: 40,
             open_url: "http://localhost:8080".into(),
-            info: vec![
-                "Free core only: premium module, analytics and update checks disabled.".into(),
-            ],
+            info: vec!["Self-hosted PDF toolkit (AGPL-3.0 build).".into()],
         },
-        "library-portal" => {
+        "library" => {
             let root = repo_root(loaded)?;
             AppPlan {
-                container: "library-portal",
-                image: "vncli-library-portal".into(),
+                container: "library",
+                image: "vncli-library".into(),
                 build: Some((root.join("docker").join("library-portal"), None)),
                 lifecycle: Lifecycle::Recreate { rm_on_exit: false },
                 harden: true,
@@ -228,10 +198,6 @@ pub fn open_reported(
     let plan = plan_for(name, loaded)?;
     check_docker_ready(report)?;
 
-    // Per-app preparation.
-    if name == "silverbullet" {
-        backup_silverbullet_space(report)?;
-    }
     for (host_path, _) in &plan.mounts {
         fs::create_dir_all(host_path)
             .with_context(|| format!("failed to create mount dir: {}", host_path.display()))?;
@@ -873,52 +839,6 @@ fn open_browser(url: &str, report: &mut dyn FnMut(&str)) {
     {
         report(&format!("[DOCKER] [INFO] Open manually: {url}"));
     }
-}
-
-/// Back up ~/silverbullet-space to Desktop/silverbullet-space-backup-<ts>
-/// before recreating the container (matches the old win11 script; the old
-/// ubuntu script asked interactively — now both platforms back up always).
-fn backup_silverbullet_space(report: &mut dyn FnMut(&str)) -> Result<()> {
-    let home = dirs::home_dir().context("could not determine home directory")?;
-    let space = home.join("silverbullet-space");
-    if !space.exists() {
-        report("[DOCKER] [INFO] Space folder does not exist, creating it.");
-        fs::create_dir_all(&space)?;
-        return Ok(());
-    }
-    let desktop = home.join("Desktop");
-    if !desktop.exists() {
-        report("[DOCKER] [WARNING] No Desktop folder; skipping space backup.");
-        return Ok(());
-    }
-    let ts = chrono::Local::now().format("%Y%m%d-%H%M%S");
-    let target = desktop.join(format!("silverbullet-space-backup-{ts}"));
-    report(&format!(
-        "[DOCKER] [INFO] Backing up space folder to: {}",
-        target.display()
-    ));
-    copy_dir_recursive(&space, &target)?;
-    report(&format!(
-        "[DOCKER] [OK] Backup completed: {}",
-        target.display()
-    ));
-    Ok(())
-}
-
-fn copy_dir_recursive(src: &Path, dst: &Path) -> Result<()> {
-    fs::create_dir_all(dst)?;
-    for entry in fs::read_dir(src)? {
-        let entry = entry?;
-        let src_path = entry.path();
-        let dst_path = dst.join(entry.file_name());
-        if entry.file_type()?.is_dir() {
-            copy_dir_recursive(&src_path, &dst_path)?;
-        } else {
-            fs::copy(&src_path, &dst_path)
-                .with_context(|| format!("failed to copy {}", src_path.display()))?;
-        }
-    }
-    Ok(())
 }
 
 fn repo_root(loaded: &LoadedConfig) -> Result<PathBuf> {
