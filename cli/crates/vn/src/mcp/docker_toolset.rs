@@ -167,7 +167,10 @@ impl AppsToolset {
     /// `call_by_name`'s streaming path - see `apps_toolset.rs`'s
     /// `open_app_impl` for why this split exists (the `#[tool]` macro can't
     /// carry an extra live-reporter parameter).
-    async fn docker_check_impl(&self, live: Option<LiveReporter>) -> Result<CallToolResult, McpError> {
+    async fn docker_check_impl(
+        &self,
+        live: Option<LiveReporter>,
+    ) -> Result<CallToolResult, McpError> {
         run_reported(live, apps::docker_check_reported).await
     }
 
@@ -235,7 +238,9 @@ impl AppsToolset {
             }
             "docker_check" => Some(self.docker_check_impl(Some(live)).await),
             "docker_stop_all" => Some(self.docker_stop_all_impl(Some(live)).await),
-            "docker_remove_containers" => Some(self.docker_remove_containers_impl(Some(live)).await),
+            "docker_remove_containers" => {
+                Some(self.docker_remove_containers_impl(Some(live)).await)
+            }
             "docker_remove_images" => Some(self.docker_remove_images_impl(Some(live)).await),
             "docker_disk_usage" => Some(self.docker_disk_usage().await),
             _ => None,

@@ -5,35 +5,25 @@
 # RUSTSEC advisories database
 db-path = "~/.cargo/advisory-db"
 db-urls = ["https://github.com/rustsec/advisory-db/raw/main/db.toml.gz"]
-vulnerability = "warn"
-unmaintained = "warn"
-unsound = "warn"
-notice = "warn"
+unmaintained = "workspace"
+unsound = "workspace"
 ignore = []
 
 [licenses]
-# Use permissive licenses only
-db-path = "~/.cargo/license-db"
-db-urls = ["https://github.com/EmbarkStudios/cargo-deny/raw/main/license-db.bin"]
+# Use permissive licenses only - this is an allow-list; anything not listed
+# here (including GPL/AGPL/SSPL/other copyleft) is rejected by default.
 confidence-threshold = 0.8
 allow = [
     "MIT",
     "Apache-2.0",
-    "Apache-2.0 OR MIT",
+    "Apache-2.0 WITH LLVM-exception",
     "BSD-2-Clause",
     "BSD-3-Clause",
     "ISC",
+    "Unicode-3.0",
     "Unicode-DFS-2016",
+    "Zlib",
 ]
-deny = [
-    "GPL",
-    "AGPL",
-    "SSPL",
-    "Copyleft",
-]
-copyleft = "warn"
-allow-osi-fsf-free = true
-default = "deny"
 
 [bans]
 # Ban certain crates or versions

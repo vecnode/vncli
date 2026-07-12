@@ -894,11 +894,9 @@ impl AppState {
                 ProcEvent::ChatReply(Err(err)) => {
                     self.push_log(LogEntry::Error(format!("[ERROR] {}", err)))
                 }
-                ProcEvent::McpActivity(text) => self.extend_log(
-                    split_to_entries(text, false)
-                        .into_iter()
-                        .map(LogEntry::Mcp),
-                ),
+                ProcEvent::McpActivity(text) => {
+                    self.extend_log(split_to_entries(text, false).into_iter().map(LogEntry::Mcp))
+                }
             }
         }
 
