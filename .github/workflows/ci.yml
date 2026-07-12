@@ -44,6 +44,11 @@ jobs:
   supply-chain:
     name: cargo-deny / cargo-audit
     runs-on: ubuntu-latest
+    # rustsec/audit-check publishes its results as a GitHub check run, which
+    # needs this beyond the default read-only GITHUB_TOKEN.
+    permissions:
+      contents: read
+      checks: write
     steps:
       - uses: actions/checkout@v4
 
