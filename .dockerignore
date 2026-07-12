@@ -1,0 +1,15 @@
+# Keep the Docker build context small. The doc-processor image builds with the
+# repo root as context (COPY . /app) but only needs docker/ and scripts/ -
+# everything below is large or irrelevant and slows the build.
+.git
+cli/target
+library
+docs
+dotfiles
+**/__pycache__
+**/*.pyc
+**/*.log
+node_modules
+.venv
+.idea
+.vscode
