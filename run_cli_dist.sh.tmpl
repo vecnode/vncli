@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Distributed launcher: the vn binary already ships prebuilt at the path
+# below (packaged by distribute_cli.sh), so unlike run_cli.sh this does
+# NOT invoke cargo and works on a machine with no Rust toolchain installed.
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
+VN_BIN="./cli/target/__RUST_HOST__/debug/vn"
+
+if [[ ! -x "$VN_BIN" ]]; then
+  echo "[ERROR] Binary not found: $VN_BIN"
+  exit 1
+fi
+
+if ! command -v rustscan >/dev/null 2>&1; then
+  echo "[INFO] rustscan not found. 'vn net scan' will not work until it is installed."
+  echo "[INFO] Install with: cargo install rustscan"
+fi
+
+echo "[INFO] Launching vn..."
+set +e
+"$VN_BIN" "$@"
+VN_EXIT=$?
+set -e
+
+if [[ "$VN_EXIT" -ne 0 ]]; then
+  echo "[ERROR] vn exited with code $VN_EXIT."
+fi
+
+exit "$VN_EXIT"
