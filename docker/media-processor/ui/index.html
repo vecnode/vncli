@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>vncli doc-processor</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="top-layout">
+    <section class="top-box top-box-left">
+      <h1>doc processor</h1>
+      <p>Simple local UI and API.</p>
+
+      <section>
+        <p><strong>UI:</strong> <code>http://localhost:8085</code></p>
+        <p><strong>API:</strong> <code>http://localhost:8086</code></p>
+      </section>
+
+      <button id="check">Check API Health</button>
+      <div id="status"></div>
+    </section>
+
+    <section class="top-box top-box-right" aria-label="Drop zone panel">
+      <h2>Path Drop Zone</h2>
+      <p>Drop files or folders here. Paths below are ready to send to the API.</p>
+
+      <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Drop files and folders">
+        Drop files or folders here
+      </div>
+
+      <div class="drop-actions">
+        <button id="pickFilesBtn" type="button">Choose Files</button>
+        <button id="pickFolderBtn" type="button">Choose Folder</button>
+        <button id="clearPathsBtn" type="button">Clear</button>
+      </div>
+
+      <input id="pickFilesInput" type="file" multiple hidden />
+      <input id="pickFolderInput" type="file" webkitdirectory directory multiple hidden />
+
+      <p class="paths-title">Current paths</p>
+      <pre id="pathList" class="paths-output">No files selected yet.</pre>
+    </section>
+  </main>
+
+  <hr class="section-divider" />
+
+  <main class="simple-ui">
+    <section id="panelPandoc" class="processor-panel active" role="tabpanel" aria-labelledby="tabPandoc">
+      <h2 class="simple-title">Pandoc Processor</h2>
+      <div class="pandoc-options" aria-label="Pandoc PDF options">
+        <div class="pandoc-options-row">
+          <label class="option-field">
+            <span>PDF profile</span>
+            <select id="pandocPdfModeSelect">
+              <option value="latex">LaTeX-style</option>
+              <option value="viewer">Viewer-style</option>
+            </select>
+          </label>
+          <label class="option-field">
+            <span>Font size</span>
+            <select id="pandocFontSizeSelect">
+              <option value="">Use Markdown/default</option>
+              <option value="10pt">10pt</option>
+              <option value="11pt">11pt</option>
+              <option value="12pt">12pt</option>
+            </select>
+          </label>
+          <label class="option-field option-toggle">
+            <input id="pandocBlackLinksToggle" type="checkbox" />
+            <span>All links black</span>
+          </label>
+        </div>
+        <div class="pandoc-options-row">
+          <label class="option-field">
+            <span>Paper size</span>
+            <select id="pandocPaperSizeSelect">
+              <option value="">Use Markdown/default</option>
+              <option value="a4">A4</option>
+              <option value="letter">Letter</option>
+            </select>
+          </label>
+          <label class="option-field">
+            <span>Margin</span>
+            <select id="pandocMarginSelect">
+              <option value="">Use Markdown/default</option>
+              <option value="0.75in">0.75in</option>
+              <option value="1in">1in</option>
+              <option value="1.25in">1.25in</option>
+            </select>
+          </label>
+          <label class="option-field option-toggle">
+            <input id="pandocTocToggle" type="checkbox" />
+            <span>Table of contents</span>
+          </label>
+          <label class="option-field option-toggle">
+            <input id="pandocNumberSectionsToggle" type="checkbox" />
+            <span>Number sections</span>
+          </label>
+        </div>
+      </div>
+      <div class="pandoc-actions">
+        <button id="pandocVersionBtn" type="button">Get Pandoc Version</button>
+        <button id="pandocConvertBtn" type="button">Markdown to PDF</button>
+      </div>
+      <pre id="pandocConvertStatus" class="pandoc-status"></pre>
+    </section>
+
+    <hr class="section-divider" />
+
+    <section id="panelJoin" class="processor-panel active" role="tabpanel" aria-labelledby="tabJoin">
+      <h2 class="simple-title">Join PDFs</h2>
+      <p class="simple-subtitle">
+        Choose a folder in the Path Drop Zone above, then merge its PDFs into one file
+        (ordered by file name). The joined PDF is saved to your Desktop.
+      </p>
+      <div class="pandoc-options" aria-label="Join options">
+        <div class="pandoc-options-row">
+          <label class="option-field">
+            <span>Output file name</span>
+            <input id="joinOutputName" type="text" placeholder="joined.pdf" />
+          </label>
+        </div>
+      </div>
+      <div class="pandoc-actions">
+        <button id="joinPdfBtn" type="button">Join PDFs (by name)</button>
+      </div>
+      <pre id="joinStatus" class="pandoc-status"></pre>
+    </section>
+  </main>
+
+  <script src="./main.js"></script>
+</body>
+</html>

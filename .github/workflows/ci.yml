@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: fmt / clippy / build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: cli
+
+      - name: cargo fmt --check
+        run: cargo fmt --manifest-path cli/Cargo.toml --check
+
+      - name: cargo clippy
+        run: cargo clippy --manifest-path cli/Cargo.toml -p vn --all-targets -- -D warnings
+
+      - name: cargo build --locked
+        run: cargo build --manifest-path cli/Cargo.toml -p vn --locked
+
+      - name: cargo test --locked
+        run: cargo test --manifest-path cli/Cargo.toml -p vn --locked
+
+  supply-chain:
+    name: cargo-deny / cargo-audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: cargo-deny (advisories, licenses, bans)
+        uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          manifest-path: cli/Cargo.toml
+
+      - name: cargo-audit (RustSec advisory DB)
+        uses: rustsec/audit-check@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file: cli/Cargo.lock

@@ -1,0 +1,55 @@
+# cargo-deny configuration for vncli
+# Reference: https://embarkstudios.github.io/cargo-deny/
+
+[advisories]
+# RUSTSEC advisories database
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/rustsec/advisory-db/raw/main/db.toml.gz"]
+vulnerability = "warn"
+unmaintained = "warn"
+unsound = "warn"
+notice = "warn"
+ignore = []
+
+[licenses]
+# Use permissive licenses only
+db-path = "~/.cargo/license-db"
+db-urls = ["https://github.com/EmbarkStudios/cargo-deny/raw/main/license-db.bin"]
+confidence-threshold = 0.8
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 OR MIT",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-DFS-2016",
+]
+deny = [
+    "GPL",
+    "AGPL",
+    "SSPL",
+    "Copyleft",
+]
+copyleft = "warn"
+allow-osi-fsf-free = true
+default = "deny"
+
+[bans]
+# Ban certain crates or versions
+multiple-versions = "warn"
+wildcards = "warn"
+highlight = "all"
+allow = []
+deny = [
+    # Unstable or unmaintained crates
+    { name = "openssl", version = "*" }, # Use rustls instead
+]
+skip-tree = []
+
+[sources]
+# Only allow crates from reputable sources
+unknown-registry = "warn"
+unknown-git = "warn"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []
