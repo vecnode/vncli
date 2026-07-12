@@ -1,0 +1,76 @@
+name: Release
+
+# Manual trigger only, same philosophy as ci.yml - builds release binaries
+# for an existing tag and attaches them to that tag's GitHub Release.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing git tag to build and attach binaries to (e.g. v0.1.0)"
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: package (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry and target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: cli
+
+      - name: Build distribution (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: distribute_cli.bat
+
+      - name: Build distribution (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          chmod +x distribute_cli.sh run_cli_dist.sh.tmpl
+          ./distribute_cli.sh
+
+      - name: Archive distribution (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $distDir = Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Directory -Filter "vncli-*" | Select-Object -First 1
+          if (-not $distDir) { throw "distribution folder not found under $env:USERPROFILE\Desktop" }
+          Compress-Archive -Path $distDir.FullName -DestinationPath "$($distDir.Name).zip"
+          echo "ASSET=$($distDir.Name).zip" >> $env:GITHUB_ENV
+
+      - name: Archive distribution (Linux)
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          DIST_DIR="$(find "$HOME/Desktop" -maxdepth 1 -type d -name 'vncli-*' | head -n1)"
+          if [ -z "$DIST_DIR" ]; then
+            echo "distribution folder not found under $HOME/Desktop"
+            exit 1
+          fi
+          tar -czf "$(basename "$DIST_DIR").tar.gz" -C "$(dirname "$DIST_DIR")" "$(basename "$DIST_DIR")"
+          echo "ASSET=$(basename "$DIST_DIR").tar.gz" >> "$GITHUB_ENV"
+
+      - name: Upload release asset
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release upload "${{ inputs.tag }}" "$ASSET" --clobber
