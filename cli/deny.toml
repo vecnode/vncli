@@ -25,6 +25,9 @@ allow = [
     # Community Data License Agreement Permissive 2.0 - used by webpki-roots
     # for its bundled CA certificate data, not code.
     "CDLA-Permissive-2.0",
+    # Weak (file-level) copyleft, not viral like GPL/AGPL - used by option-ext
+    # (a small dirs-sys dependency).
+    "MPL-2.0",
 ]
 
 # ollama-rs's published Cargo.toml doesn't declare a license field, so
