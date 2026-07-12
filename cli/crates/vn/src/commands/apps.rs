@@ -23,6 +23,7 @@ pub const APP_NAMES: &[&str] = &[
     "library",
     "media-downloader",
     "doc-processor",
+    "translator",
 ];
 
 enum Lifecycle {
@@ -171,6 +172,29 @@ fn plan_for(name: &str, loaded: &LoadedConfig) -> Result<AppPlan> {
                 info: vec!["API: http://localhost:8086  (PDF output goes to your Desktop)".into()],
             }
         }
+        "translator" => AppPlan {
+            container: "translator",
+            // AGPL-3.0, self-hosted, no API key required by default.
+            image: "libretranslate/libretranslate:latest".into(),
+            build: None,
+            lifecycle: Lifecycle::Reuse,
+            harden: false,
+            pids_limit: None,
+            linux_user: false,
+            ports: vec![(5000, 5000)],
+            env: vec![],
+            mounts: vec![],
+            wait_port: 5000,
+            // First run downloads every language's translation model
+            // (~9-10 GB); observed 5-10 minutes depending on connection
+            // speed, so give it a generous margin. Reuse means that cost
+            // is paid only once.
+            wait_tries: 400,
+            open_url: "http://localhost:5000".into(),
+            info: vec![
+                "LibreTranslate (AGPL-3.0). First run downloads translation models for every language (~9-10 GB, 5-10 minutes); the container is reused afterward.".into(),
+            ],
+        },
         other => bail!("unknown app: {other}. Available: {}", APP_NAMES.join(", ")),
     };
     Ok(plan)

@@ -1758,6 +1758,10 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
                 action: Action::Execute(vec!["app", "open", "doc-processor"]),
             },
             CommandItem {
+                label: "vn app open translator",
+                action: Action::Execute(vec!["app", "open", "translator"]),
+            },
+            CommandItem {
                 label: "< Back to ubuntu22",
                 action: Action::OpenMenu(MenuKind::RunUbuntu22),
             },
@@ -1896,6 +1900,10 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
             CommandItem {
                 label: "vn app open doc-processor",
                 action: Action::Execute(vec!["app", "open", "doc-processor"]),
+            },
+            CommandItem {
+                label: "vn app open translator",
+                action: Action::Execute(vec!["app", "open", "translator"]),
             },
             CommandItem {
                 label: "< Back to win11",

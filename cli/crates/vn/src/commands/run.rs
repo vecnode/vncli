@@ -50,6 +50,8 @@ fn try_native(name: &str, loaded: &LoadedConfig) -> Option<Result<()>> {
         "open-media-downloader" => apps::open("media-downloader", loaded, false),
         "stop-media-downloader" => apps::stop("media-downloader", loaded),
         "open-doc-processor" => apps::open("doc-processor", loaded, false),
+        "open-translator" => apps::open("translator", loaded, false),
+        "stop-translator" => apps::stop("translator", loaded),
         "check-docker" => apps::docker_check(),
         "stop-all-containers" => apps::docker_stop_all(),
         "remove-containers" | "remove-all-containers" => apps::docker_remove_containers(),
