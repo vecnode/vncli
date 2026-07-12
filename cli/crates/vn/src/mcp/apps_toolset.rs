@@ -96,7 +96,7 @@ impl AppsToolset {
 #[tool_router]
 impl AppsToolset {
     #[tool(
-        description = "List the Dockerized vncli apps that can be opened or stopped (e.g. silverbullet, library-portal, stirling-pdf, media-downloader, doc-processor, docs)."
+        description = "List the Dockerized vncli apps that can be opened or stopped (e.g. silverbullet, bentopdf, library, media-downloader, doc-processor, docs)."
     )]
     async fn list_apps(&self) -> Result<CallToolResult, McpError> {
         Ok(CallToolResult::success(vec![ContentBlock::text(

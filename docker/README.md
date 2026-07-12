@@ -10,19 +10,19 @@ launch scripts for these apps.
 | Folder | App | Port(s) | What it does |
 |--------|-----|---------|---------------|
 | [media-processor/](media-processor/) | doc-processor | 8085 (UI) / 8086 (API) | Markdown → PDF via pandoc + [tectonic](https://tectonic-typesetting.github.io/) |
-| [library-portal/](library-portal/) | library-portal | 8090 | Viewer/manager for the repo's `library/` folder — edit, tag, list/grid/tree views, drag-and-drop |
+| [library-portal/](library-portal/) | library | 8090 | Viewer/manager for the repo's `library/` folder — edit, tag, list/grid/tree views, drag-and-drop |
 | [media-downloader/](media-downloader/) | media-downloader | 8095 | yt-dlp + ffmpeg web UI — paste a URL, save MP3/WAV/MP4 to the host Desktop |
 
 Each folder has its own `README.md` with manual `docker build`/`run` commands, but the
 normal way to run any of these is through `vn`:
 
 ```bash
-vn app open <name>    # e.g. vn app open library-portal
+vn app open <name>    # e.g. vn app open library
 vn app stop <name>
 vn app list
 ```
 
-`docs/` (mdBook) and SilverBullet/Stirling-PDF (pulled vendor images) are also part of
+`docs/` (mdBook) and SilverBullet/BentoPDF (pulled vendor images) are also part of
 the same `vn app` registry but don't have a folder here — the first has its own
 [docs/Dockerfile](../docs/Dockerfile), and the latter two are pulled, not built.
 

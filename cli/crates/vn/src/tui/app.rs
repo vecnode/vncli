@@ -1746,12 +1746,12 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
                 action: Action::Execute(vec!["app", "open", "silverbullet"]),
             },
             CommandItem {
-                label: "vn app open stirling-pdf",
-                action: Action::Execute(vec!["app", "open", "stirling-pdf"]),
+                label: "vn app open bentopdf",
+                action: Action::Execute(vec!["app", "open", "bentopdf"]),
             },
             CommandItem {
-                label: "vn app open library-portal",
-                action: Action::Execute(vec!["app", "open", "library-portal"]),
+                label: "vn app open library",
+                action: Action::Execute(vec!["app", "open", "library"]),
             },
             CommandItem {
                 label: "vn app open media-downloader",
@@ -1890,12 +1890,12 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
                 action: Action::Execute(vec!["app", "open", "silverbullet"]),
             },
             CommandItem {
-                label: "vn app open stirling-pdf",
-                action: Action::Execute(vec!["app", "open", "stirling-pdf"]),
+                label: "vn app open bentopdf",
+                action: Action::Execute(vec!["app", "open", "bentopdf"]),
             },
             CommandItem {
-                label: "vn app open library-portal",
-                action: Action::Execute(vec!["app", "open", "library-portal"]),
+                label: "vn app open library",
+                action: Action::Execute(vec!["app", "open", "library"]),
             },
             CommandItem {
                 label: "vn app open media-downloader",

@@ -244,7 +244,7 @@ were replaced by:
 - `vn app list` — the app registry.
 - `vn docker check|stop-all|remove-containers|remove-images` — global maintenance.
 
-Legacy names still work: `vn run win11-open-library-portal` etc. route to the native
+Legacy names still work: `vn run win11-open-library` etc. route to the native
 implementation (see `try_native` in `run.rs`), so old muscle memory and docs don't break.
 
 Every app is an `AppPlan` in `plan_for()` — image, container, optional build context,
@@ -256,10 +256,11 @@ The engine enforces the security posture automatically (don't bypass it): ports 
 plan sets `linux_user` (so bind-mount files stay user-owned). See SECURITY.md.
 
 Apps: SilverBullet (`ghcr.io/silverbulletmd/silverbullet`, port 3000, backs up the space
-folder to Desktop before each start), Stirling-PDF (`stirlingtools/stirling-pdf`, port 8080,
-reuses its container), docs (mdBook, port 3000), plus the locally built **library-portal**
-(8090), **doc-processor** (8085/8086, image source `docker/media-processor/`) and
-**media-downloader** (8095), which rebuild + recreate on every open (picks up code edits).
+folder to Desktop before each start), BentoPDF (`ghcr.io/alam00000/bentopdf-simple`, port
+8080, AGPL-3.0 self-hosted build, reuses its container), docs (mdBook, port 3000), plus the
+locally built **library** (8090, image source `docker/library-portal/`), **doc-processor**
+(8085/8086, image source `docker/media-processor/`) and **media-downloader** (8095), which
+rebuild + recreate on every open (picks up code edits).
 
 **media-downloader (custom, locally built):** a tiny yt-dlp + ffmpeg web app in
 [docker/media-downloader/](docker/media-downloader/) — `debian:12-slim` + a single stdlib
@@ -278,10 +279,10 @@ first URL. yt-dlp also runs with `--ignore-config --restrict-filenames --max-fil
 and saves via a sanitized, traversal-checked, collision-safe filename confined to the
 mount.
 
-**library-portal (custom, locally built):** a lightweight viewer/manager for the repo's
+**library (custom, locally built):** a lightweight viewer/manager for the repo's
 `library/` folder, living in [docker/library-portal/](docker/library-portal/) —
 `python:3.12-slim` + a single stdlib `app.py`, plus PyMuPDF for thumbnails.
-`vn app open library-portal` builds the image (the build context is only
+`vn app open library` builds the image (the build context is only
 `docker/library-portal/`, so **no PDFs enter the image**), then runs it with the repo
 `library/` bind-mounted on port 8090 and opens Chrome. The server walks `/library` per
 request and renders an index in the same light, simple card style as doc-processor's UI

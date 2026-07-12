@@ -20,8 +20,8 @@ use std::time::Duration;
 pub const APP_NAMES: &[&str] = &[
     "docs",
     "silverbullet",
-    "stirling-pdf",
-    "library-portal",
+    "bentopdf",
+    "library",
     "media-downloader",
     "doc-processor",
 ];
@@ -43,8 +43,8 @@ struct AppPlan {
     /// Apply --cap-drop ALL --security-opt no-new-privileges (+ pids limit).
     /// True for our locally built images (they run non-root and need no caps);
     /// false for pulled vendor images whose entrypoints legitimately need
-    /// privilege transitions (e.g. Stirling-PDF setpriv's from root to its
-    /// app user, which requires CAP_SETUID/SETGID).
+    /// privilege transitions (e.g. a root-to-app-user setpriv step requiring
+    /// CAP_SETUID/SETGID).
     harden: bool,
     pids_limit: Option<u32>,
     /// Linux: pass --user $(uid):$(gid) so bind-mount files stay user-owned.
@@ -108,38 +108,28 @@ fn plan_for(name: &str, loaded: &LoadedConfig) -> Result<AppPlan> {
                 format!("Data folder: {}", home.join("silverbullet-space").display()),
             ],
         },
-        "stirling-pdf" => AppPlan {
-            container: "stirling-pdf",
-            image: "stirlingtools/stirling-pdf:latest".into(),
+        "bentopdf" => AppPlan {
+            container: "bentopdf",
+            // Self-hosted build (AGPL-3.0, free) - not the commercial build.
+            image: "ghcr.io/alam00000/bentopdf-simple:latest".into(),
             build: None,
             lifecycle: Lifecycle::Reuse,
             harden: false,
             pids_limit: None,
             linux_user: false,
             ports: vec![(8080, 8080)],
-            // Free core only, fully local: DISABLE_ADDITIONAL_FEATURES
-            // turns off the premium/license/login module (v7 enables it by
-            // default), and the other two stop the posthog analytics and the
-            // update-check pings. This is a loopback-only local tool.
-            env: vec![
-                ("DISABLE_ADDITIONAL_FEATURES".into(), "true".into()),
-                ("SECURITY_ENABLELOGIN".into(), "false".into()),
-                ("SYSTEM_ENABLEANALYTICS".into(), "false".into()),
-                ("SYSTEM_SHOWUPDATE".into(), "false".into()),
-            ],
+            env: vec![],
             mounts: vec![],
             wait_port: 8080,
             wait_tries: 40,
             open_url: "http://localhost:8080".into(),
-            info: vec![
-                "Free core only: premium module, analytics and update checks disabled.".into(),
-            ],
+            info: vec!["Self-hosted PDF toolkit (AGPL-3.0 build).".into()],
         },
-        "library-portal" => {
+        "library" => {
             let root = repo_root(loaded)?;
             AppPlan {
-                container: "library-portal",
-                image: "vncli-library-portal".into(),
+                container: "library",
+                image: "vncli-library".into(),
                 build: Some((root.join("docker").join("library-portal"), None)),
                 lifecycle: Lifecycle::Recreate { rm_on_exit: false },
                 harden: true,

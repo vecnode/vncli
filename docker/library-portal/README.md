@@ -1,8 +1,8 @@
-# library-portal
+# library
 
 A lightweight web viewer/manager for the repo's `library/` folder.
 
-- Image: built locally as `vncli-library-portal` from this folder
+- Image: built locally as `vncli-library` from this folder
   (`python:3.12-slim` + a single stdlib `app.py`, plus PyMuPDF for thumbnails).
 - The build context is **only this folder**, so **no PDFs are baked into the image**.
 - At runtime the launcher bind-mounts the repo `library/` to `/library`. The server walks
@@ -21,6 +21,6 @@ State: metadata overrides + tags live in `library/.portal/portal.json`, and thum
 cached under `library/.portal/thumbs/` (both gitignored, hidden from the listing). The PDFs
 themselves are only modified on an explicit rename.
 
-Run it from the vncli TUI **Open** menu (`open-library-portal`) — it builds the image,
+Run it from the vncli TUI **Open** menu (`vn app open library`) — it builds the image,
 starts the container with `library/` mounted on **port 8090**, and opens Chrome at
-`http://localhost:8090`. Stop with `stop-library-portal`.
+`http://localhost:8090`. Stop with `vn app stop library`.

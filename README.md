@@ -35,7 +35,7 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 
 - `vn tui` (default) — terminal UI tying everything below together.
 - `vn git sync|status` — pull/status across every git repo under a root folder (defaults to `~/dev`).
-- `vn app open|stop|list` — build/launch self-hosted research apps (docs, library-portal, media-downloader, doc-processor, and pulled images like SilverBullet and Stirling-PDF) as Docker containers, hardened and loopback-only by default.
+- `vn app open|stop|list` — build/launch self-hosted research apps (docs, library, media-downloader, doc-processor, and pulled images like SilverBullet and BentoPDF) as Docker containers, hardened and loopback-only by default.
 - `vn docker ps|up|down|prune|check|stop-all|remove-containers|remove-images` — direct container/image management.
 - `vn ai status|models|pull|chat` — offline chat and model management against a local [Ollama](https://ollama.com/) server.
 - `vn sys info|update|clean` — host system information and maintenance.
