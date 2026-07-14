@@ -1,7 +1,7 @@
 # vncli
 
 [![Language: Rust](https://img.shields.io/badge/language-Rust-DEA584?logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 **An Open-Source Personal Management CLI for Researchers**
 
@@ -29,11 +29,12 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 - Build/launch container applications
   - Docs
   - Library
-  - Media Downloader
-  - Doc Processor
   - Translator
+  - Link Downloader
+  - PDF Processor
+  - Markdown Processor
 - Direct Docker container/image management.
-- Offline chat and model management against a local Ollama server.
+- Offline chat and model management with [Ollama](https://ollama.com/).
 - Host system information and maintenance.
 - Local network port scanning via RustScan.
 - MCP Server.
@@ -55,4 +56,4 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 
 ## License
 
-MIT - see [LICENSE](LICENSE). Author: vecnode.
+Apache 2.0 - see [LICENSE](LICENSE). Author: vecnode.
