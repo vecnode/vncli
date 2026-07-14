@@ -24,8 +24,8 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 
 ## Features
 
-- Terminal UI tying everything below together.
-- Pull/status across every git repo under a root folder (defaults to `~/dev`).
+- Terminal UI
+- Pull/status across every git repo
 - Build/launch container applications
   - Docs
   - Library
@@ -35,20 +35,20 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
   - Markdown Processor
 - Direct Docker container/image management.
 - Offline chat and model management with [Ollama](https://ollama.com/).
-- Host system information and maintenance.
-- Local network port scanning via RustScan.
+- Host system information.
+- Local network port scanning via [RustScan](https://github.com/bee-san/RustScan).
 - MCP Server.
 
 ## Commands
 
-- `vn tui` (default) — terminal UI tying everything below together.
-- `vn git sync|status` — pull/status across every git repo under a root folder (defaults to `~/dev`).
-- `vn app open|stop|list` — build/launch self-hosted research apps (docs, library, media-downloader, doc-processor, and pulled images like BentoPDF and LibreTranslate) as Docker containers, hardened and loopback-only by default.
-- `vn docker ps|up|down|prune|check|stop-all|remove-containers|remove-images` — direct container/image management.
-- `vn ai status|models|pull|chat` — offline chat and model management against a local [Ollama](https://ollama.com/) server.
-- `vn sys info|update|clean` — host system information and maintenance.
-- `vn net scan` — local network port scanning via RustScan.
-- `vn mcp serve` — expose vncli's own tools (list/open/stop apps, docker/system introspection) as an MCP server over stdio or HTTP, for use from Claude Desktop/Code or vncli's own in-TUI chat.
+- `vn tui` (default) - terminal UI.
+- `vn git sync|status` - pull/status across every git repo under a root folder (defaults to `~/dev`).
+- `vn app open|stop|list` - build/launch self-hosted research apps as Docker containers.
+- `vn docker ps|up|down|prune|check|stop-all|remove-containers|remove-images` - direct container/image management.
+- `vn ai status|models|pull|chat` - offline chat and model management against a local [Ollama](https://ollama.com/) server.
+- `vn sys info|update|clean` - host system information.
+- `vn net scan` - local network port scanning via [RustScan](https://github.com/bee-san/RustScan).
+- `vn mcp serve` - expose vncli's own tools (list/open/stop apps, docker/system introspection) as an MCP server over stdio or HTTP, for use from Claude Desktop/Code or vncli's own in-TUI chat.
 
 ## Downloading repositories
 
