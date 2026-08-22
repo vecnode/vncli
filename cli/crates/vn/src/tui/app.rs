@@ -57,6 +57,7 @@ enum MenuKind {
     RunUbuntu22Github,
     RunUbuntu22Open,
     RunUbuntu22Ai,
+    RunUbuntu22Dotfiles,
     RunWin11,
     RunWin11Network,
     RunWin11Dependencies,
@@ -435,7 +436,8 @@ impl AppState {
             | MenuKind::RunUbuntu22Dependencies
             | MenuKind::RunUbuntu22Github
             | MenuKind::RunUbuntu22Open
-            | MenuKind::RunUbuntu22Ai => Some(MenuKind::RunUbuntu22),
+            | MenuKind::RunUbuntu22Ai
+            | MenuKind::RunUbuntu22Dotfiles => Some(MenuKind::RunUbuntu22),
             MenuKind::RunWin11Network
             | MenuKind::RunWin11Dependencies
             | MenuKind::RunWin11Github
@@ -1619,7 +1621,8 @@ fn menu_allowed_on_current_os(menu: MenuKind) -> bool {
         | MenuKind::RunUbuntu22Dependencies
         | MenuKind::RunUbuntu22Github
         | MenuKind::RunUbuntu22Open
-        | MenuKind::RunUbuntu22Ai => !cfg!(windows),
+        | MenuKind::RunUbuntu22Ai
+        | MenuKind::RunUbuntu22Dotfiles => !cfg!(windows),
         MenuKind::RunWin11
         | MenuKind::RunWin11Network
         | MenuKind::RunWin11Dependencies
@@ -1652,6 +1655,10 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
             CommandItem {
                 label: "vn run ubuntu22-ai",
                 action: Action::OpenMenu(MenuKind::RunUbuntu22Ai),
+            },
+            CommandItem {
+                label: "vn run ubuntu22-dotfiles",
+                action: Action::OpenMenu(MenuKind::RunUbuntu22Dotfiles),
             },
             CommandItem {
                 label: "vn run ubuntu22-network",
@@ -1934,6 +1941,19 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
             CommandItem {
                 label: "< Back to win11",
                 action: Action::OpenMenu(MenuKind::RunWin11),
+            },
+        ],
+        // Unlike the win11 counterpart this is ExecuteConfirm: the Linux script
+        // purges packages and masks systemd units, which is exactly what the
+        // type-"yes" gate exists for.
+        MenuKind::RunUbuntu22Dotfiles => vec![
+            CommandItem {
+                label: "vn run ubuntu22-setup-dotfiles",
+                action: Action::ExecuteConfirm(vec!["run", "ubuntu22-setup-dotfiles"]),
+            },
+            CommandItem {
+                label: "< Back to ubuntu22",
+                action: Action::OpenMenu(MenuKind::RunUbuntu22),
             },
         ],
         MenuKind::RunWin11Dotfiles => vec![
