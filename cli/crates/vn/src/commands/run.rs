@@ -96,6 +96,12 @@ fn map_script(name: &str) -> Result<ScriptTarget> {
         "ubuntu22-open-ollama" => ScriptTarget {
             relative_path: "scripts/ubuntu22/open_ollama.sh",
         },
+        // One script covers 22.04 and 24.04 (it detects the release itself), so
+        // it lives in dotfiles/ubuntu/ rather than a versioned folder; the name
+        // keeps the ubuntu22- prefix the rest of the menu tree uses.
+        "ubuntu22-setup-dotfiles" | "ubuntu-setup-dotfiles" => ScriptTarget {
+            relative_path: "dotfiles/ubuntu/setup_dotfiles.sh",
+        },
         "check-internet" => ScriptTarget {
             relative_path: if is_linux {
                 "scripts/ubuntu22/check_internet.sh"
@@ -152,6 +158,13 @@ fn map_script(name: &str) -> Result<ScriptTarget> {
                 "scripts/win11/open_ollama.bat"
             },
         },
+        "setup-dotfiles" => ScriptTarget {
+            relative_path: if is_linux {
+                "dotfiles/ubuntu/setup_dotfiles.sh"
+            } else {
+                "dotfiles/win11/setup_dotfiles.bat"
+            },
+        },
         "win11" => ScriptTarget {
             relative_path: "scripts/win11/main.bat",
         },
@@ -192,7 +205,7 @@ fn map_script(name: &str) -> Result<ScriptTarget> {
             relative_path: "scripts/tools-cli/alpine/main.sh",
         },
         _ => bail!(
-            "unknown script name '{}'. Supported linux and win11 script names plus cross-platform aliases (e.g. check-internet, check-dependencies, open-docker, open-docs, open-doc-processor, check-ollama, open-ollama, download-all-repos, download-all-orgs, run-cli-container, open-library)",
+            "unknown script name '{}'. Supported linux and win11 script names plus cross-platform aliases (e.g. check-internet, check-dependencies, open-docker, open-docs, open-doc-processor, check-ollama, open-ollama, download-all-repos, download-all-orgs, run-cli-container, open-library, setup-dotfiles)",
             name
         ),
     };

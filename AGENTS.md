@@ -74,9 +74,36 @@ cli/                       Cargo workspace
 scripts/ubuntu22/*.sh      Linux task scripts
 scripts/win11/*.bat        Windows task scripts
 scripts/tools-cli/alpine/  In-container tools workflow
-dotfiles/                  Dotfile setup (e.g. win11 setup_dotfiles.bat)
+dotfiles/win11/            Windows dotfiles: setup_dotfiles.bat + global_configs.ps1
+dotfiles/ubuntu/           Ubuntu 22.04/24.04 dotfiles: setup_dotfiles.sh + global_configs.sh
 docs/, docker/, assets/
 ```
+
+## Dotfiles
+
+`dotfiles/win11` and `dotfiles/ubuntu` are matched baselines — the same set of controls
+(privacy/telemetry, package removal, power, screensaver, black background) expressed per
+OS, plus each side's N/A list so the two can be read against each other. One Ubuntu script
+covers 22.04 and 24.04: version differences (GNOME 42 vs 46 schemas,
+`ubuntu-advantage-tools` vs `ubuntu-pro-client` unit names) are absorbed by probing whether
+a key or unit exists, not by branching on `VERSION_ID`.
+
+**The Linux side does not elevate itself, and must never prompt for a sudo password.**
+`setup_dotfiles.bat` requests UAC once and runs everything as Administrator; that model
+can't work on Linux, where `gsettings`/`dconf` need the *user's* session bus and
+`systemctl`/`apt`/`sysctl` need root. `global_configs.sh` therefore runs unprivileged and
+guards system-level sections behind a `sudo -n true` probe (`$HAVE_SUDO`), the same way
+`global_configs.ps1` guards HKLM writes behind `$isAdmin`. The probe must stay
+non-interactive: `vn run` spawns these with piped stdout/stderr, so a real sudo prompt
+would hang the TUI's CLI Output panel with nothing visible to type into. If you add a
+root-level section, gate it on `$HAVE_SUDO` and print a `[WARNING] Skipped …` line rather
+than calling bare `sudo`. Desktop sections are likewise gated on `$HAS_SESSION`, and their
+summary lines use `log_desktop` (silent without a session bus) so a headless run doesn't
+claim to have applied settings that `gset` skipped.
+
+`gset` records each key's outgoing value into a runnable restore script under
+`~/.local/state/vncli/`; that covers dconf only, not package removals or `/etc` drop-ins.
+`--dry-run` prints every change and applies none — use it to check a new section.
 
 ## Build, run, check
 
