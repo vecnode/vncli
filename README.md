@@ -1,7 +1,7 @@
 # vncli
 
 [![Language: Rust](https://img.shields.io/badge/language-Rust-DEA584?logo=rust&logoColor=white)](https://www.rust-lang.org/)
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 
 **An Open-Source Personal Management CLI for Researchers**
 
@@ -33,6 +33,7 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
   - Link Downloader
   - PDF Processor
   - Markdown Processor
+  - Zotero Sync
 - Direct Docker container/image management.
 - Offline chat and model management with [Ollama](https://ollama.com/).
 - Host system information.
@@ -46,6 +47,7 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 - `vn app open|stop|list` - build/launch self-hosted research apps as Docker containers.
 - `vn docker ps|up|down|prune|check|stop-all|remove-containers|remove-images` - direct container/image management.
 - `vn ai status|models|pull|chat` - offline chat and model management against a local [Ollama](https://ollama.com/) server.
+- `vn bib sync|status` - export the local Zotero library to a git-tracked `zotero/references.bib`. Merges only; it never removes a reference.
 - `vn sys info|update|clean` - host system information.
 - `vn net scan` - local network port scanning via [RustScan](https://github.com/bee-san/RustScan).
 - `vn mcp serve` - expose vncli's own tools (list/open/stop apps, docker/system introspection) as an MCP server over stdio or HTTP, for use from Claude Desktop/Code or vncli's own in-TUI chat.
@@ -56,4 +58,4 @@ Either launcher builds `vn` with cargo and drops you into the TUI. To produce a 
 
 ## License
 
-Apache 2.0 - see [LICENSE](LICENSE). Author: vecnode.
+AGPL-3.0 - see [LICENSE](LICENSE). Author: vecnode.

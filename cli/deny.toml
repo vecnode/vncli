@@ -30,6 +30,14 @@ allow = [
     "MPL-2.0",
 ]
 
+# vncli itself is AGPL-3.0. That is deliberately NOT added to the allow-list
+# above, which governs what we are willing to *depend on* and stays
+# permissive-only; this exception is scoped to our own crate so a new AGPL
+# dependency would still be rejected.
+[[licenses.exceptions]]
+crate = "vn"
+allow = ["AGPL-3.0-only"]
+
 # ollama-rs's published Cargo.toml doesn't declare a license field, so
 # cargo-deny can't verify it from metadata alone. Its repo's LICENSE.md
 # confirms MIT (github.com/pepperoni21/ollama-rs). The hash below is a

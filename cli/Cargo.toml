@@ -4,7 +4,7 @@ resolver = "2"
 
 [workspace.package]
 edition = "2021"
-license = "Apache-2.0"
+license = "AGPL-3.0-only"
 authors = ["vecnode"]
 
 [workspace.dependencies]
@@ -15,6 +15,7 @@ dirs = "5.0"
 reqwest = { version = "0.12", default-features = false, features = ["json", "stream", "rustls-tls"] }
 ratatui = { version = "0.28", features = ["unstable-rendered-line-info"] }
 regex = "1"
+rusqlite = { version = "0.32", features = ["bundled"] }
 ollama-rs = { version = "0.3", features = ["stream"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"

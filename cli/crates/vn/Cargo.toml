@@ -2,7 +2,7 @@
 name = "vn"
 version = "0.1.0"
 edition = "2021"
-license = "Apache-2.0"
+license = "AGPL-3.0-only"
 description = "vncli - cross-platform personal management CLI for researchers"
 
 [dependencies]
@@ -16,6 +16,7 @@ ratatui = { workspace = true }
 regex = { workspace = true }
 ollama-rs = { workspace = true }
 reqwest = { workspace = true }
+rusqlite = { workspace = true }
 rmcp = { version = "2", features = ["transport-io", "transport-streamable-http-server"] }
 hyper-util = { version = "0.1", features = ["tokio", "server-auto", "service"] }
 schemars = "1"

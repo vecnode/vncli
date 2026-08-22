@@ -1,5 +1,6 @@
 pub mod ai;
 pub mod apps;
+pub mod bib;
 pub mod docker;
 pub mod git;
 pub mod mcp;

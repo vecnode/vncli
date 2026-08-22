@@ -26,6 +26,7 @@ struct Cli {
 enum Command {
     Ai(AiArgs),
     App(AppArgs),
+    Bib(BibArgs),
     Sys(SysArgs),
     Docker(DockerArgs),
     Git(GitArgs),
@@ -120,6 +121,42 @@ enum AiCommand {
 }
 
 #[derive(clap::Args, Debug)]
+struct BibArgs {
+    #[command(subcommand)]
+    command: Option<BibSubcommand>,
+}
+
+#[derive(Subcommand, Debug)]
+enum BibSubcommand {
+    /// Export the local Zotero library to the git-tracked BibTeX file.
+    ///
+    /// Reads a snapshot copy of zotero.sqlite, so it works whether or not
+    /// Zotero is running and never touches the live library. Citation keys
+    /// are pinned in citekeys.json and never change once assigned.
+    Sync {
+        /// Zotero data directory. Defaults to [zotero] data_dir, then ~/Zotero.
+        #[arg(long)]
+        data_dir: Option<PathBuf>,
+        /// Output .bib path. Defaults to <repo>/zotero/references.bib.
+        #[arg(long)]
+        out: Option<PathBuf>,
+        /// Emit one entry per Zotero item instead of collapsing items whose
+        /// bibliographic content is identical.
+        #[arg(long)]
+        no_dedupe: bool,
+        /// Report what would change and write nothing.
+        #[arg(long)]
+        dry_run: bool,
+    },
+    /// Compare the Zotero library against the checked-in .bib without writing.
+    Status {
+        /// Zotero data directory. Defaults to [zotero] data_dir, then ~/Zotero.
+        #[arg(long)]
+        data_dir: Option<PathBuf>,
+    },
+}
+
+#[derive(clap::Args, Debug)]
 struct RunArgs {
     name: String,
 }
@@ -209,6 +246,7 @@ async fn main() -> Result<()> {
             AppCommand::Stop { name } => commands::apps::stop(&name, &loaded)?,
             AppCommand::List => commands::apps::list()?,
         },
+        Some(Command::Bib(args)) => commands::bib::run(args, &loaded)?,
         Some(Command::Sys(args)) => commands::sys::run(args)?,
         Some(Command::Docker(args)) => commands::docker::run(args)?,
         Some(Command::Git(args)) => commands::git::run(args)?,

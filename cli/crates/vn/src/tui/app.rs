@@ -1643,6 +1643,14 @@ fn menu_items(menu: MenuKind) -> Vec<CommandItem> {
                 action: Action::Execute(vec!["sys", "info"]),
             },
             CommandItem {
+                label: "vn bib sync (Zotero -> zotero/references.bib)",
+                action: Action::Execute(vec!["bib", "sync"]),
+            },
+            CommandItem {
+                label: "vn bib status",
+                action: Action::Execute(vec!["bib", "status"]),
+            },
+            CommandItem {
                 label: "vn run ubuntu22",
                 action: Action::OpenMenu(MenuKind::RunUbuntu22),
             },
