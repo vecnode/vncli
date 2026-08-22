@@ -17,6 +17,12 @@ pub struct AppConfig {
     pub ollama: OllamaConfig,
     pub sessions: SessionsConfig,
     pub prompts: PromptConfig,
+    /// `#[serde(default)]` matters: config.toml files written before this
+    /// section existed have no `[zotero]` table, and `load_or_init` never
+    /// rewrites an existing file. Without it every older install would fail
+    /// to parse its own config.
+    #[serde(default)]
+    pub zotero: ZoteroConfig,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -36,6 +42,17 @@ pub struct PromptConfig {
     pub system: Option<String>,
 }
 
+/// Both default to `None` rather than a concrete path: `vn bib` falls back to
+/// `~/Zotero` (Zotero's default on every OS) and to `<repo>/zotero/references.bib`,
+/// which keeps a config written on one machine valid on the other.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+pub struct ZoteroConfig {
+    #[serde(default)]
+    pub data_dir: Option<String>,
+    #[serde(default)]
+    pub bib_path: Option<String>,
+}
+
 impl Default for AppConfig {
     fn default() -> Self {
         let sessions_dir = default_sessions_dir();
@@ -51,6 +68,7 @@ impl Default for AppConfig {
             prompts: PromptConfig {
                 system: Some(default_system_prompt()),
             },
+            zotero: ZoteroConfig::default(),
         }
     }
 }

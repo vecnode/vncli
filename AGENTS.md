@@ -221,6 +221,40 @@ and routed to `commands/apps.rs` — scripts are only for genuinely OS-specific 
 Repo root is resolved via `--repo-root`, `VNCLI_REPO_ROOT`, the config location, or
 by walking up for a dir that has both `.git/` and `scripts/`.
 
+## Bibliography: `vn bib`
+
+[cli/crates/vn/src/commands/bib.rs](cli/crates/vn/src/commands/bib.rs) exports the local
+Zotero library to `zotero/references.bib`, which is **committed** — the other machine gets
+the bibliography from git and needs neither Zotero nor a Zotero account. Reads a temporary
+copy of `zotero.sqlite` (plus `-wal`/`-shm`) via `rusqlite`, so it works whether or not
+Zotero is running and cannot touch the live library; the copy is removed in `Snapshot`'s
+`Drop`, including on error.
+
+Three invariants hold the design together. Breaking any of them breaks something downstream
+that is hard to notice:
+
+- **Sync never removes an entry.** There is deliberately no `--prune`. Entries in the file
+  with no matching Zotero item — deleted there, or hand-written into the `.bib` — are
+  always kept and reported. A silently vanishing reference breaks every document citing it.
+- **Citekeys are pinned** in `zotero/citekeys.json` (Zotero item key → citekey) and never
+  reissued, so editing a title in Zotero cannot invalidate an existing `\cite{}`. Every
+  member of a duplicate group pins to the *same* citekey, which is why merging duplicates
+  inside Zotero later leaves the `.bib` unchanged.
+- **Output is deterministic**: sorted by citekey, fixed field order, no timestamp in the
+  file. An unchanged library re-renders byte for byte. Don't add anything time-varying to
+  the header — it would produce a diff on every sync and bury the real changes.
+
+Deduplication (on by default, `--no-dedupe` to disable) groups items by `signature()`,
+which is *the rendered entry with a blank citekey* — not the raw Zotero fields. That
+distinction is deliberate: `accessDate`/`libraryCatalog`/`shortTitle` vary freely between
+two imports of one paper and are never emitted, and comparing raw fields left visibly
+identical entries in the file under different keys.
+
+`[zotero] data_dir` / `bib_path` in `config.toml` are `#[serde(default)]` and `Option`;
+`load_or_init` never rewrites an existing config, so a missing `[zotero]` table must keep
+parsing. Note that `.gitignore` ignores `references.bib`/`citekeys.json` globally and then
+re-includes the two under `zotero/` — keep those negations if you touch that file.
+
 ## Networking: open-port scanning
 
 `vn net scan [target]` ([cli/crates/vn/src/commands/net.rs](cli/crates/vn/src/commands/net.rs))
